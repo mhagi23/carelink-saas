@@ -3,8 +3,7 @@ const mongoose = require('mongoose');
 const facilitySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
-        trim: true
+        required: true
     },
     address: {
         street: String,
@@ -22,38 +21,18 @@ const facilitySchema = new mongoose.Schema({
         contactPerson: String
     },
     capacity: {
-        totalBeds: {
-            type: Number,
-            required: true
-        },
-        availableBeds: {
-            type: Number,
-            required: true
-        }
+        totalBeds: Number,
+        availableBeds: Number
     },
-    specialties: [{
-        type: String
-    }],
-    insuranceAccepted: [{
-        type: String
-    }],
-    certifications: [{
-        type: String
-    }],
+    specialties: [String],
+    insuranceAccepted: [String],
     rating: {
         type: Number,
         min: 0,
-        max: 5,
-        default: 0
+        max: 5
     },
-    responseTime: {
-        type: String,
-        default: '30 min'
-    },
-    successRate: {
-        type: Number,
-        default: 0
-    },
+    responseTime: String,
+    successRate: Number,
     active: {
         type: Boolean,
         default: true
@@ -61,10 +40,5 @@ const facilitySchema = new mongoose.Schema({
 }, {
     timestamps: true
 });
-
-// Add indexes for search performance
-facilitySchema.index({ 'address.coordinates': '2dsphere' });
-facilitySchema.index({ specialties: 1 });
-facilitySchema.index({ insuranceAccepted: 1 });
 
 module.exports = mongoose.model('Facility', facilitySchema);

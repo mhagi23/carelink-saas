@@ -3,7 +3,6 @@ const cors = require('cors');
 const helmet = require('helmet');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
-const rateLimit = require('express-rate-limit');
 
 // Load environment variables
 dotenv.config();
@@ -17,31 +16,54 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rate limiting
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per windowMs
-});
-app.use('/api/', limiter);
+// Import routes
+const authRoutes = require('./routes/auth');
+const facilitiesRoutes = require('./routes/facilities');
+const transfersRoutes = require('./routes/transfers');
 
-// Database connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/carelink', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log('✅ Connected to MongoDB');
-}).catch(err => {
-    console.error('❌ MongoDB connection error:', err);
-});
+// Database connection (optional - works without it for now)
+if (process.env.MONGODB_URI) {
+    mongoose.connect(process.env.MONGODB_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    }).then(() => {
+        console.log('✅ Connected to MongoDB');
+    }).catch(err => {
+        console.log('⚠️  MongoDB not connected, using mock data');
+    });
+} else {
+    console.log('ℹ️  Running without database - using mock data');
+}
 
 // Routes
-app.use('/api/auth', require('./routes/auth'));
-app.use('/api/facilities', require('./routes/facilities'));
-app.use('/api/transfers', require('./routes/transfers'));
+app.use('/api/auth', authRoutes);
+app.use('/api/facilities', facilitiesRoutes);
+app.use('/api/transfers', transfersRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-    res.json({ status: 'OK', timestamp: new Date() });
+    res.json({ 
+        status: 'OK', 
+        timestamp: new Date(),
+        services: {
+            api: 'running',
+            database: mongoose.connection.readyState === 1 ? 'connected' : 'mock mode'
+        }
+    });
+});
+
+// Root route
+app.get('/', (req, res) => {
+    res.json({
+        message: 'CareLink API Server',
+        version: '1.0.0',
+        endpoints: {
+            health: '/api/health',
+            facilities: '/api/facilities',
+            transfers: '/api/transfers',
+            auth: '/api/auth/login'
+        }
+    });
 });
 
 // Error handling middleware
@@ -53,5 +75,7 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`📊 API Health: http://localhost:${PORT}/api/health`);
+    console.log(`🏥 Facilities: http://localhost:${PORT}/api/facilities`);
 });

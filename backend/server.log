@@ -1,0 +1,4 @@
+ℹ️  Running without database - using mock data
+🚀 Server running on http://localhost:3000
+📊 API Health: http://localhost:3000/api/health
+🏥 Facilities: http://localhost:3000/api/facilities
