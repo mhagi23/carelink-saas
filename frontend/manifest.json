@@ -1,0 +1,21 @@
+{
+    "name": "CareLink - Hospital Transfer Platform",
+    "short_name": "CareLink",
+    "description": "Streamline patient transfers between hospitals and homecare facilities",
+    "start_url": "/dashboard.html",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#2563eb",
+    "icons": [
+        {
+            "src": "/assets/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/assets/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

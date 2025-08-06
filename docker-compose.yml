@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:6
+    container_name: carelink-db
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: secure_password
+      MONGO_INITDB_DATABASE: carelink
+    volumes:
+      - mongodb_data:/data/db
+
+  backend:
+    build: ./backend
+    container_name: carelink-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      MONGODB_URI: mongodb://admin:secure_password@mongodb:27017/carelink?authSource=admin
+      JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - mongodb
+
+  frontend:
+    image: nginx:alpine
+    container_name: carelink-frontend
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+volumes:
+  mongodb_data:

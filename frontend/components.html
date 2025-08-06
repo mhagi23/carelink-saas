@@ -1,0 +1,72 @@
+<!-- Reusable UI Components -->
+
+<!-- Notification Component -->
+<div id="notification-template" style="display: none;">
+    <div class="notification">
+        <div class="notification-icon"></div>
+        <div class="notification-content">
+            <h4 class="notification-title"></h4>
+            <p class="notification-message"></p>
+        </div>
+        <button class="notification-close">×</button>
+    </div>
+</div>
+
+<!-- Transfer Modal Component -->
+<div id="transfer-modal-template" style="display: none;">
+    <div class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Request Patient Transfer</h2>
+                <button class="modal-close">×</button>
+            </div>
+            <form id="transfer-form">
+                <div class="form-group">
+                    <label>Patient Name *</label>
+                    <input type="text" name="patientName" required>
+                </div>
+                <div class="form-group">
+                    <label>Medical Record Number *</label>
+                    <input type="text" name="mrn" required>
+                </div>
+                <div class="form-group">
+                    <label>Primary Diagnosis *</label>
+                    <input type="text" name="diagnosis" required>
+                </div>
+                <div class="form-group">
+                    <label>Care Requirements</label>
+                    <select name="careType" multiple>
+                        <option>Post-Surgical Care</option>
+                        <option>Wound Care</option>
+                        <option>Physical Therapy</option>
+                        <option>IV Therapy</option>
+                        <option>Respiratory Care</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Insurance Provider</label>
+                    <select name="insurance">
+                        <option>Medicare</option>
+                        <option>Medicaid</option>
+                        <option>Blue Cross</option>
+                        <option>Aetna</option>
+                        <option>UnitedHealth</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Preferred Transfer Date</label>
+                    <input type="datetime-local" name="transferDate">
+                </div>
+                <div class="form-group">
+                    <label>Special Notes</label>
+                    <textarea name="notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
